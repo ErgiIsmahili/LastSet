@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1095657647910",
+    "project_id": "last-set-fit",
+    "storage_bucket": "last-set-fit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095657647910:android:24ddf62bea44b445fe5be7",
+        "android_client_info": {
+          "package_name": "com.lastset.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFoJgAK0HaKrU1ViqDGf8mcU3xo4GhX98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
