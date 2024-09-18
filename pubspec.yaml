@@ -43,6 +43,8 @@ dependencies:
   firebase_auth:
   get_it:
   dartz:
+  flutter_swiper_null_safety:
+  http:
 
 dev_dependencies:
   flutter_test:

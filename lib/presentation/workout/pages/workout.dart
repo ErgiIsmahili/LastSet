@@ -1,6 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:myapp/common/helpers/is_dark_mode.dart';
+import 'package:myapp/common/widgets/appbar/app_bar.dart';
+import 'package:myapp/common/widgets/button/basic_app_button.dart';
+import 'package:myapp/core/configs/assets/app_images.dart';
+import 'package:myapp/core/configs/assets/app_vectors.dart';
 
 class WorkoutPage extends StatefulWidget {
   final List<String> selectedMuscleGroups;
@@ -58,21 +65,66 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = context.isDarkMode;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Workout: ${widget.selectedMuscleGroups.join(", ")}'),
+      appBar: BasicAppBar(
+        title: SvgPicture.asset(
+          AppVectors.logo,
+          height: 40,
+          width: 40,
+          colorFilter: ColorFilter.mode(
+            isDarkMode ? Colors.white : Colors.black, BlendMode.srcIn),
+        ),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : exercises.isEmpty
               ? Center(child: Text('No exercises found for the selected muscle groups.'))
-              : ListView.builder(
-                  itemCount: exercises.length,
-                  itemBuilder: (context, index) {
-                    final exercise = exercises[index];
-                    return ExerciseCard(exercise: exercise);
-                  },
+              : Column(
+                  children: [
+                    Expanded(
+                      child: Swiper(
+                        itemBuilder: (BuildContext context, int index) {
+                          return ExerciseCard(exercise: exercises[index]);
+                        },
+                        itemCount: exercises.length,
+                        viewportFraction: 0.8,
+                        scale: 0.9,
+                      ),
+                    ),
+                    _buildBottomSection(context),
+                  ],
                 ),
+    );
+  }
+
+  Widget _buildBottomSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          _searchField(context),
+          const SizedBox(height: 20),
+          BasicAppButton(
+            onPressed: () {
+              // Implement finish workout logic
+            },
+            title: 'Finish Workout',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _searchField(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: 'Search Workout',
+        prefixIcon: Icon(Icons.search),
+      ).applyDefaults(
+        Theme.of(context).inputDecorationTheme
+      ),
     );
   }
 }
@@ -85,24 +137,86 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              exercise['name'],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    exercise['name'],
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis, // This will truncate the text if it's too long
+                  ),
+                ),
+                Icon(Icons.favorite_border),
+              ],
             ),
-            SizedBox(height: 8),
-            Text('Type: ${exercise['type']}'),
-            Text('Muscle: ${exercise['muscle']}'),
-            Text('Equipment: ${exercise['equipment']}'),
-            SizedBox(height: 8),
-            Text('Instructions:'),
-            Text(exercise['instructions']),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Image.asset(
+              AppImages.arms,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                SetInfo(setNumber: 1, weight: 85, reps: 10),
+                SetInfo(setNumber: 2, weight: 85, reps: 10),
+                SetInfo(setNumber: 3, weight: 85, reps: 10),
+                SizedBox(height: 8),
+                OutlinedButton(
+                  onPressed: () {
+                    // Implement add set logic
+                  },
+                  child: Text('+ Add Set'),
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SetInfo extends StatelessWidget {
+  final int setNumber;
+  final int weight;
+  final int reps;
+
+  const SetInfo({
+    required this.setNumber,
+    required this.weight,
+    required this.reps,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('$setNumber'),
+          Text('$weight lb x $reps'),
+          Text('$weight'),
+          Text('$reps'),
+          Icon(Icons.check, color: Colors.green),
+        ],
       ),
     );
   }
