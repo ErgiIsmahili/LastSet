@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
@@ -46,22 +47,27 @@ class _WorkoutPageState extends State<WorkoutPage> {
     });
   }
 
-  Future<List<Map<String, dynamic>>> _fetchExercisesForMuscle(String muscle) async {
-    final apiKey = 'PdptD7Q2cyZeOpC8HEclaw==7XPb9YKy7O6hAGqT';
-    final url = Uri.parse('https://api.api-ninjas.com/v1/exercises?muscle=$muscle');
+ Future<List<Map<String, dynamic>>> _fetchExercisesForMuscle(String muscle) async {
+  final apiKey = dotenv.env['API_NINJA_KEY'] ?? '';
 
-    final response = await http.get(
-      url,
-      headers: {'X-Api-Key': apiKey},
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return data.cast<Map<String, dynamic>>().take(5).toList();
-    } else {
-      throw Exception('Failed to load exercises for $muscle');
-    }
+  if (apiKey.isEmpty) {
+    throw Exception('API Key is not available');
   }
+
+  final url = Uri.parse('https://api.api-ninjas.com/v1/exercises?muscle=$muscle');
+
+  final response = await http.get(
+    url,
+    headers: {'X-Api-Key': apiKey},
+  );
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = json.decode(response.body);
+    return data.cast<Map<String, dynamic>>().take(5).toList();
+  } else {
+    throw Exception('Failed to load exercises for $muscle');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +84,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : exercises.isEmpty
-              ? Center(child: Text('No exercises found for the selected muscle groups.'))
+              ? const Center(child: Text('No exercises found for the selected muscle groups.'))
               : Column(
                   children: [
                     Expanded(
@@ -119,7 +125,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   Widget _searchField(BuildContext context) {
     return TextField(
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Search Workout',
         prefixIcon: Icon(Icons.search),
       ).applyDefaults(
@@ -149,11 +155,11 @@ class ExerciseCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     exercise['name'],
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis, // This will truncate the text if it's too long
                   ),
                 ),
-                Icon(Icons.favorite_border),
+                const Icon(Icons.favorite_border),
               ],
             ),
           ),
@@ -168,15 +174,15 @@ class ExerciseCard extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SetInfo(setNumber: 1, weight: 85, reps: 10),
-                SetInfo(setNumber: 2, weight: 85, reps: 10),
-                SetInfo(setNumber: 3, weight: 85, reps: 10),
-                SizedBox(height: 8),
+                const SetInfo(setNumber: 1, weight: 85, reps: 10),
+                const SetInfo(setNumber: 2, weight: 85, reps: 10),
+                const SetInfo(setNumber: 3, weight: 85, reps: 10),
+                const SizedBox(height: 8),
                 OutlinedButton(
                   onPressed: () {
                     // Implement add set logic
                   },
-                  child: Text('+ Add Set'),
+                  child: const Text('+ Add Set'),
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -215,7 +221,7 @@ class SetInfo extends StatelessWidget {
           Text('$weight lb x $reps'),
           Text('$weight'),
           Text('$reps'),
-          Icon(Icons.check, color: Colors.green),
+          const Icon(Icons.check, color: Colors.green),
         ],
       ),
     );
