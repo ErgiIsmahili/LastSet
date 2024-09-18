@@ -1,80 +1,106 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class WorkoutPage extends StatelessWidget {
-  final String workoutName;
-  final String workoutImage;
+class WorkoutPage extends StatefulWidget {
+  final List<String> selectedMuscleGroups;
 
   const WorkoutPage({
-    required this.workoutName,
-    required this.workoutImage,
+    required this.selectedMuscleGroups,
     super.key,
   });
 
   @override
+  State<WorkoutPage> createState() => _WorkoutPageState();
+}
+
+class _WorkoutPageState extends State<WorkoutPage> {
+  List<Map<String, dynamic>> exercises = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchExercises();
+  }
+
+  Future<void> fetchExercises() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final exercises = await Future.wait(
+      widget.selectedMuscleGroups.map((muscle) => _fetchExercisesForMuscle(muscle))
+    );
+
+    setState(() {
+      this.exercises = exercises.expand((e) => e).toList();
+      isLoading = false;
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchExercisesForMuscle(String muscle) async {
+    final apiKey = 'PdptD7Q2cyZeOpC8HEclaw==7XPb9YKy7O6hAGqT';
+    final url = Uri.parse('https://api.api-ninjas.com/v1/exercises?muscle=$muscle');
+
+    final response = await http.get(
+      url,
+      headers: {'X-Api-Key': apiKey},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.cast<Map<String, dynamic>>().take(5).toList();
+    } else {
+      throw Exception('Failed to load exercises for $muscle');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-        vertical: 50,
-        horizontal: 50
-        ),
+      appBar: AppBar(
+        title: Text('Workout: ${widget.selectedMuscleGroups.join(", ")}'),
+      ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : exercises.isEmpty
+              ? Center(child: Text('No exercises found for the selected muscle groups.'))
+              : ListView.builder(
+                  itemCount: exercises.length,
+                  itemBuilder: (context, index) {
+                    final exercise = exercises[index];
+                    return ExerciseCard(exercise: exercise);
+                  },
+                ),
+    );
+  }
+}
+
+class ExerciseCard extends StatelessWidget {
+  final Map<String, dynamic> exercise;
+
+  const ExerciseCard({required this.exercise, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(8),
+      child: Padding(
+        padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              workoutName,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
+              exercise['name'],
             ),
-            const SizedBox(height: 20),
-            Center(
-              child: Image.asset(
-                workoutImage,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Select Weight (kg):',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter weight in kg',
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Reps Selection
-            const Text(
-              'Number of Reps:',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter number of reps',
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Add Button
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle adding the workout here
-                },
-                child: const Text('Add Workout'),
-              ),
-            ),
+            SizedBox(height: 8),
+            Text('Type: ${exercise['type']}'),
+            Text('Muscle: ${exercise['muscle']}'),
+            Text('Equipment: ${exercise['equipment']}'),
+            SizedBox(height: 8),
+            Text('Instructions:'),
+            Text(exercise['instructions']),
           ],
         ),
       ),

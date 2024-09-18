@@ -38,8 +38,7 @@ class RootPageState extends State<RootPage> {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => WorkoutPage(
-            workoutName: selectedMuscleGroups.join(', '),
-            workoutImage: 'assets/images/custom_workout.jpg',
+            selectedMuscleGroups: selectedMuscleGroups.toList(),
           ),
         ),
       );
