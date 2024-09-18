@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/common/helpers/is_dark_mode.dart';
 import 'package:myapp/common/widgets/appbar/app_bar.dart';
 import 'package:myapp/common/widgets/button/basic_app_button.dart';
-import 'package:myapp/common/widgets/card/workout_day_card.dart';
 import 'package:myapp/core/configs/assets/app_vectors.dart';
 import 'package:myapp/presentation/workout/pages/workout.dart';
 
@@ -11,43 +10,42 @@ class RootPage extends StatefulWidget {
   const RootPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _RootPageState createState() => _RootPageState();
+  State<RootPage> createState() => RootPageState();
 }
 
-class _RootPageState extends State<RootPage> {
-  final List<Map<String, String>> workoutDays = [
-    {'name': 'Push Workout', 'image_url': 'assets/images/push.jpg'},
-    {'name': 'Pull Workout', 'image_url': 'assets/images/pull.png'},
-    {'name': 'Leg Workout', 'image_url': 'assets/images/legs.jpg'},
-    {'name': 'Upper Body Workout', 'image_url': 'assets/images/upper.jpg'},
-    {'name': 'Arm Workout', 'image_url': 'assets/images/arms.jpg'},
-    {'name': 'Accessories', 'image_url': 'assets/images/accessories.png'},
-    {'name': 'Chest/Back', 'image_url': 'assets/images/chest_back.jpg'},
-    {'name': 'Chest/Bi', 'image_url': 'assets/images/chest_bi.png'},
-    {'name': 'Back/Tri', 'image_url': 'assets/images/back_tri.jpg'},
-    {'name': 'Fullbody Workout', 'image_url': 'assets/images/fullbody.png'},
+class RootPageState extends State<RootPage> {
+  final List<String> muscleGroups = [
+    'abdominals', 'abductors', 'adductors', 'biceps', 'calves',
+    'chest', 'forearms', 'glutes', 'hamstrings', 'lats',
+    'lower_back', 'middle_back', 'neck', 'quadriceps', 'traps', 'triceps'
   ];
 
-  String? selectedDay;
+  Set<String> selectedMuscleGroups = {};
 
-  void _onCardTap(String day) {
+  void _onMuscleGroupSelect(String muscleGroup) {
     setState(() {
-      selectedDay = day;
+      if (selectedMuscleGroups.contains(muscleGroup)) {
+        selectedMuscleGroups.remove(muscleGroup);
+      } else {
+        selectedMuscleGroups.add(muscleGroup);
+      }
     });
   }
 
   void _onSubmit() {
-    if (selectedDay != null) {
+    if (selectedMuscleGroups.isNotEmpty) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const WorkoutPage(workoutName: 'Push-up', workoutImage: 'assets/images/chest_back.jpg',)
+          builder: (BuildContext context) => WorkoutPage(
+            workoutName: selectedMuscleGroups.join(', '),
+            workoutImage: 'assets/images/custom_workout.jpg',
+          ),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a workout day.')),
+        const SnackBar(content: Text('Please select at least one muscle group.')),
       );
     }
   }
@@ -66,26 +64,79 @@ class _RootPageState extends State<RootPage> {
             isDarkMode ? Colors.white : Colors.black, BlendMode.srcIn)
         ),
       ),
-      body: ListView.builder(
-        itemCount: workoutDays.length,
-        itemBuilder: (context, index) {
-          final workoutDay = workoutDays[index];
-          final title = workoutDay['name']!;
-          final imageUrl = workoutDay['image_url']!;
+      body: Column(
+        children: [
+          const Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Select muscle groups for your workout:',
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 3 / 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: muscleGroups.length,
+              itemBuilder: (context, index) {
+                final muscleGroup = muscleGroups[index];
+                final isSelected = selectedMuscleGroups.contains(muscleGroup);
 
-          return WorkoutDayCard(
-            title: title,
-            imageUrl: imageUrl,
-            isSelected: selectedDay == title,
-            onTap: () => _onCardTap(title),
-          );
-        },
+                return InkWell(
+                  onTap: () => _onMuscleGroupSelect(muscleGroup),
+                  child: Card(
+                    elevation: isSelected ? 8 : 2,
+                    color: isSelected ? Theme.of(context).primaryColor : null,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Text(
+                            muscleGroup.replaceAll('_', ' ').toUpperCase(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: isSelected ? Colors.white : null,
+                            ),
+                          ),
+                        ),
+                        if (isSelected)
+                          const Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BasicAppButton(
-          onPressed: _onSubmit,
-          title: "Start Workout",
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Selected: ${selectedMuscleGroups.join(', ')}',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            BasicAppButton(
+              onPressed: _onSubmit,
+              title: "Start Workout",
+            ),
+          ],
         ),
       ),
     );
