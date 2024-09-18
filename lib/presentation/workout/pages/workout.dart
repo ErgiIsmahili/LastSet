@@ -138,7 +138,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 class ExerciseCard extends StatelessWidget {
   final Map<String, dynamic> exercise;
 
-  const ExerciseCard({required this.exercise, Key? key}) : super(key: key);
+  const ExerciseCard({required this.exercise, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +156,7 @@ class ExerciseCard extends StatelessWidget {
                   child: Text(
                     exercise['name'],
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis, // This will truncate the text if it's too long
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const Icon(Icons.favorite_border),
@@ -174,20 +174,20 @@ class ExerciseCard extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const SetInfo(setNumber: 1, weight: 85, reps: 10),
-                const SetInfo(setNumber: 2, weight: 85, reps: 10),
-                const SetInfo(setNumber: 3, weight: 85, reps: 10),
+                const SetInfo(setNumber: 1, previousWeight: 85, previousReps: 10),
+                const SetInfo(setNumber: 1, previousWeight: 85, previousReps: 10),
+                const SetInfo(setNumber: 1, previousWeight: 85, previousReps: 10),
                 const SizedBox(height: 8),
                 OutlinedButton(
                   onPressed: () {
                     // Implement add set logic
                   },
-                  child: const Text('+ Add Set'),
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
+                  child: const Text('+ Add Set'),
                 ),
               ],
             ),
@@ -198,17 +198,39 @@ class ExerciseCard extends StatelessWidget {
   }
 }
 
-class SetInfo extends StatelessWidget {
+class SetInfo extends StatefulWidget {
   final int setNumber;
-  final int weight;
-  final int reps;
+  final int previousWeight;
+  final int previousReps;
 
   const SetInfo({
     required this.setNumber,
-    required this.weight,
-    required this.reps,
+    required this.previousWeight,
+    required this.previousReps,
     Key? key,
   }) : super(key: key);
+
+  @override
+  _SetInfoState createState() => _SetInfoState();
+}
+
+class _SetInfoState extends State<SetInfo> {
+  late TextEditingController _weightController;
+  late TextEditingController _repsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _weightController = TextEditingController(text: widget.previousWeight.toString());
+    _repsController = TextEditingController(text: widget.previousReps.toString());
+  }
+
+  @override
+  void dispose() {
+    _weightController.dispose();
+    _repsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,10 +239,54 @@ class SetInfo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('$setNumber'),
-          Text('$weight lb x $reps'),
-          Text('$weight'),
-          Text('$reps'),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Set'),
+              Text('${widget.setNumber}'),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Previous'),
+              Text('${widget.previousWeight} lb x ${widget.previousReps}'),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('lbs'),
+              SizedBox(
+                width: 50,
+                child: TextField(
+                  controller: _weightController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 5),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('reps'),
+              SizedBox(
+                width: 50,
+                child: TextField(
+                  controller: _repsController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    border: UnderlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 5),
+                  ),
+                ),
+              ),
+            ],
+          ),
           const Icon(Icons.check, color: Colors.green),
         ],
       ),
