@@ -53,7 +53,7 @@ class SignupOrSigninPage extends StatelessWidget{
                     height: 55,
                   ),
                   Text(
-                    "Focus on your workout",
+                    "Focus on Your Workout",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -64,7 +64,7 @@ class SignupOrSigninPage extends StatelessWidget{
                     height: 21,
                   ),
                   const Text(
-                    "Stop relying on memory ",
+                    "Never forget your last workout! Track your progress with ease—view previous lifts, record your sets effortlessly, discover new exercises, break through plateaus, and achieve real results.",
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 13,

@@ -66,7 +66,7 @@ class RootPageState extends State<RootPage> {
       body: Column(
         children: [
           const Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'Select muscle groups for your workout:',
             ),

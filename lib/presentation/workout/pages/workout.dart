@@ -207,8 +207,8 @@ class SetInfo extends StatefulWidget {
     required this.setNumber,
     required this.previousWeight,
     required this.previousReps,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _SetInfoState createState() => _SetInfoState();
