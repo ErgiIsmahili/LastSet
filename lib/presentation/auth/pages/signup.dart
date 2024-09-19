@@ -9,16 +9,17 @@ import 'package:myapp/presentation/auth/pages/signin.dart';
 import 'package:myapp/presentation/root/pages/root.dart';
 import 'package:myapp/service_locator.dart';
 
-class SignupPage extends StatelessWidget{
+class SignupPage extends StatelessWidget {
   SignupPage({super.key});
 
   final TextEditingController _fullName = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       bottomNavigationBar: _signinText(context),
       appBar: BasicAppBar(
@@ -26,63 +27,44 @@ class SignupPage extends StatelessWidget{
           AppVectors.logo,
           height: 40,
           width: 40,
-          colorFilter: const ColorFilter.mode(
-                          Colors.white, BlendMode.srcIn)
+          colorFilter: ColorFilter.mode(
+            colorScheme.onSurface,
+            BlendMode.srcIn,
+          ),
         ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
-        vertical: 50,
-        horizontal: 50
+          vertical: 50,
+          horizontal: 50,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _registerText(),
-            const SizedBox(height: 50,),
+            _registerText(context),
+            const SizedBox(height: 50),
             _fullNameField(context),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             _emailField(context),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             _passwordField(context),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             BasicAppButton(
-              onPressed: () async {
-                var result = await sl<SignupUseCase>().call(
-                  params: CreateUserReq(
-                    fullName: _fullName.text.toString(),
-                    email: _email.text.toString(), 
-                    password: _password.text.toString()
-                  )
-                );
-                result.fold(
-                  (l){
-                    var snackbar = SnackBar(content: Text(l));
-                    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                  },
-                  (r){
-                    Navigator.pushAndRemoveUntil(
-                      context, 
-                      MaterialPageRoute(builder: (BuildContext context) => const RootPage()), 
-                      (route) => false
-                    );             
-                  },
-                );
-              }, 
-              title: 'Create Account'
-              )
+              onPressed: () => _handleSignup(context),
+              title: 'Create Account',
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _registerText() {
-    return const Text(
+  Widget _registerText(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Text(
       'Register',
-      style: TextStyle(
+      style: textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.bold,
-        fontSize: 25
       ),
       textAlign: TextAlign.center,
     );
@@ -92,9 +74,9 @@ class SignupPage extends StatelessWidget{
     return TextField(
       controller: _fullName,
       decoration: const InputDecoration(
-        hintText: 'Full Name'
+        hintText: 'Full Name',
       ).applyDefaults(
-        Theme.of(context).inputDecorationTheme
+        Theme.of(context).inputDecorationTheme,
       ),
     );
   }
@@ -103,9 +85,9 @@ class SignupPage extends StatelessWidget{
     return TextField(
       controller: _email,
       decoration: const InputDecoration(
-        hintText: 'Enter Email'
+        hintText: 'Enter Email',
       ).applyDefaults(
-        Theme.of(context).inputDecorationTheme
+        Theme.of(context).inputDecorationTheme,
       ),
     );
   }
@@ -113,44 +95,75 @@ class SignupPage extends StatelessWidget{
   Widget _passwordField(BuildContext context) {
     return TextField(
       controller: _password,
+      obscureText: true,
       decoration: const InputDecoration(
-        hintText: 'Password'
+        hintText: 'Password',
       ).applyDefaults(
-        Theme.of(context).inputDecorationTheme
+        Theme.of(context).inputDecorationTheme,
       ),
     );
   }
 
   Widget _signinText(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 30
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             'Do you have an account? ',
-            style: TextStyle(
+            style: textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
+              color: colorScheme.onSurface,
             ),
           ),
           TextButton(
-            onPressed: (){
+            onPressed: () {
               Navigator.push(
-                context, 
+                context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => SigninPage()
+                  builder: (BuildContext context) => SigninPage(),
                 ),
               );
-            }, 
-            child: const Text(
-              'Sign In'
-            )
-            )
+            },
+            child: Text(
+              'Sign In',
+              style: textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+                decorationColor: colorScheme.onSurface,
+                decorationThickness: 1,
+              ),
+            ),
+          )
         ],
-        ),
+      ),
+    );
+  }
+
+  void _handleSignup(BuildContext context) async {
+    var result = await sl<SignupUseCase>().call(
+      params: CreateUserReq(
+        fullName: _fullName.text.toString(),
+        email: _email.text.toString(),
+        password: _password.text.toString(),
+      ),
+    );
+    result.fold(
+      (l) {
+        var snackbar = SnackBar(content: Text(l));
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      },
+      (r) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => const RootPage()),
+          (route) => false,
+        );
+      },
     );
   }
 }

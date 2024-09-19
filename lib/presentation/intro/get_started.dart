@@ -57,7 +57,7 @@ class GetStartedPage extends StatelessWidget {
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl eros, pulvinar facilisis justo mollis.",
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      color: AppColors.grey,
+                      color: AppColors.lightGray,
                       fontSize: 13,
                     ),
                     textAlign: TextAlign.center,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:myapp/common/helpers/is_dark_mode.dart';
 import 'package:myapp/common/widgets/appbar/app_bar.dart';
 import 'package:myapp/common/widgets/button/basic_app_button.dart';
 import 'package:myapp/core/configs/assets/app_vectors.dart';
@@ -10,7 +9,7 @@ import 'package:myapp/presentation/auth/pages/signup.dart';
 import 'package:myapp/presentation/root/pages/root.dart';
 import 'package:myapp/service_locator.dart';
 
-class SigninPage extends StatelessWidget{
+class SigninPage extends StatelessWidget {
   SigninPage({super.key});
 
   final TextEditingController _email = TextEditingController();
@@ -18,7 +17,7 @@ class SigninPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = context.isDarkMode;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       bottomNavigationBar: _signupText(context),
@@ -28,59 +27,41 @@ class SigninPage extends StatelessWidget{
           height: 40,
           width: 40,
           colorFilter: ColorFilter.mode(
-                          isDarkMode ? Colors.white : Colors.black, BlendMode.srcIn),
+            colorScheme.onSurface,
+            BlendMode.srcIn,
+          ),
         ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
-        vertical: 50,
-        horizontal: 50
+          vertical: 50,
+          horizontal: 50,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _registerText(),
-            const SizedBox(height: 50,),
+            _signinText(context),
+            const SizedBox(height: 50),
             _emailField(context),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             _passwordField(context),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             BasicAppButton(
-              onPressed: () async{
-                var result = await sl<SigninUseCase>().call(
-                  params: SigninUserReq(
-                    email: _email.text.toString(), 
-                    password: _password.text.toString()
-                  ),
-                );
-                result.fold(
-                  (l){
-                    var snackbar = SnackBar(content: Text(l));
-                    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                  },
-                  (r){
-                    Navigator.pushAndRemoveUntil(
-                      context, 
-                      MaterialPageRoute(builder: (BuildContext context) => const RootPage()), 
-                      (route) => false
-                    );             
-                  },
-                );
-              }, 
-              title: 'Sign In'
-              )
+              onPressed: () => _handleSignin(context),
+              title: 'Sign In',
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _registerText() {
-    return const Text(
+  Widget _signinText(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Text(
       'Sign In',
-      style: TextStyle(
+      style: textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.bold,
-        fontSize: 25
       ),
       textAlign: TextAlign.center,
     );
@@ -89,10 +70,11 @@ class SigninPage extends StatelessWidget{
   Widget _emailField(BuildContext context) {
     return TextField(
       controller: _email,
+      keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
-        hintText: 'Enter Email'
+        hintText: 'Enter Email',
       ).applyDefaults(
-        Theme.of(context).inputDecorationTheme
+        Theme.of(context).inputDecorationTheme,
       ),
     );
   }
@@ -100,44 +82,74 @@ class SigninPage extends StatelessWidget{
   Widget _passwordField(BuildContext context) {
     return TextField(
       controller: _password,
+      obscureText: true,
       decoration: const InputDecoration(
-        hintText: 'Password'
+        hintText: 'Password',
       ).applyDefaults(
-        Theme.of(context).inputDecorationTheme
+        Theme.of(context).inputDecorationTheme,
       ),
     );
   }
 
   Widget _signupText(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 30
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             'Not A Member? ',
-            style: TextStyle(
+            style: textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
-              fontSize: 14,
+              color: colorScheme.onSurface,
             ),
           ),
           TextButton(
-            onPressed: (){
+            onPressed: () {
               Navigator.pushReplacement(
-                context, 
+                context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => SignupPage()
+                  builder: (BuildContext context) => SignupPage(),
                 ),
               );
-            }, 
-            child: const Text(
-              'Register Now'
-            )
-            )
+            },
+            child: Text(
+              'Register Now',
+              style: textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+                decorationColor: colorScheme.onSurface,
+                decorationThickness: 1,
+              ),
+            ),
+          )
         ],
-        ),
+      ),
+    );
+  }
+
+  void _handleSignin(BuildContext context) async {
+    var result = await sl<SigninUseCase>().call(
+      params: SigninUserReq(
+        email: _email.text.toString(),
+        password: _password.text.toString(),
+      ),
+    );
+    result.fold(
+      (l) {
+        var snackbar = SnackBar(content: Text(l));
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      },
+      (r) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => const RootPage()),
+          (route) => false,
+        );
+      },
     );
   }
 }

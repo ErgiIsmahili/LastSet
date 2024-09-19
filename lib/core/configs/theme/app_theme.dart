@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:myapp/core/configs/theme/app_colors.dart';
 
 class AppTheme {
-  
   static final lightTheme = ThemeData(
     primaryColor: AppColors.primary,
     scaffoldBackgroundColor: AppColors.lightBackground,
@@ -12,7 +11,7 @@ class AppTheme {
       filled: true,
       fillColor: Colors.transparent,
       hintStyle: const TextStyle(
-        color: Color(0xff383838),
+        color: AppColors.darkGray,
         fontWeight: FontWeight.w500,
       ),
       contentPadding: const EdgeInsets.all(30),
@@ -29,22 +28,42 @@ class AppTheme {
           color: Colors.black,
           width: 0.4
         ),
-      )
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+        borderSide: const BorderSide(
+          color: Colors.black,
+          width: 1.0
+        ),
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.lightBackground,
         elevation: 0,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30)
-          )
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       )
-    ) 
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.primary,
+        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+    ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: AppColors.primary,
+      selectionColor: AppColors.lightGray,
+      selectionHandleColor: AppColors.primary,
+    ),
   );
 
   static final darkTheme = ThemeData(
-    primaryColor: AppColors.primary,
+    primaryColor: AppColors.lightBackground,
     scaffoldBackgroundColor: AppColors.darkBackground,
     brightness: Brightness.dark,
     fontFamily: 'Satoshi',
@@ -52,7 +71,7 @@ class AppTheme {
       filled: true,
       fillColor: Colors.transparent,
       hintStyle: const TextStyle(
-        color: Color(0xffa7a7a7),
+        color: AppColors.lightGray,
         fontWeight: FontWeight.w500,
       ),
       contentPadding: const EdgeInsets.all(30),
@@ -69,17 +88,37 @@ class AppTheme {
           color: Colors.white,
           width: 0.4
         ),
-      )
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+        borderSide: const BorderSide(
+          color: Colors.white,
+          width: 1.0
+        ),
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.lightBackground,
+        foregroundColor: AppColors.darkBackground,
         elevation: 0,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30)
-          )
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       )
-    ) 
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.lightBackground,
+        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+    ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: AppColors.lightBackground,
+      selectionColor: AppColors.darkGray,
+      selectionHandleColor: AppColors.lightBackground,
+    ),
   );
 }

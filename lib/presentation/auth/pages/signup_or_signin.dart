@@ -68,7 +68,7 @@ class SignupOrSigninPage extends StatelessWidget{
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
-                      color: AppColors.grey
+                      color: AppColors.lightGray
                     ),
                     textAlign: TextAlign.center,
                   ),
