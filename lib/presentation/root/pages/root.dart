@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myapp/common/helpers/is_dark_mode.dart';
 import 'package:myapp/common/widgets/appbar/app_bar.dart';
 import 'package:myapp/common/widgets/button/basic_app_button.dart';
 import 'package:myapp/core/configs/assets/app_vectors.dart';
@@ -51,7 +50,8 @@ class RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = context.isDarkMode;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: BasicAppBar(
@@ -60,15 +60,18 @@ class RootPageState extends State<RootPage> {
           height: 40,
           width: 40,
           colorFilter: ColorFilter.mode(
-            isDarkMode ? Colors.white : Colors.black, BlendMode.srcIn)
+            colorScheme.onSurface,
+            BlendMode.srcIn,
+          ),
         ),
       ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               'Select muscle groups for your workout:',
+              style: theme.textTheme.bodyLarge,
             ),
           ),
           Expanded(
@@ -87,9 +90,22 @@ class RootPageState extends State<RootPage> {
 
                 return InkWell(
                   onTap: () => _onMuscleGroupSelect(muscleGroup),
-                  child: Card(
-                    elevation: isSelected ? 8 : 2,
-                    color: isSelected ? Theme.of(context).primaryColor : null,
+                  splashColor: isSelected
+                      ? Colors.transparent
+                      : colorScheme.onSurface.withOpacity(0.2),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? colorScheme.primary
+                          : colorScheme.surface,
+                      border: Border.all(
+                        color: isSelected
+                            ? colorScheme.primary
+                            : colorScheme.onSurface.withOpacity(0.6),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Stack(
                       children: [
                         Center(
@@ -98,17 +114,19 @@ class RootPageState extends State<RootPage> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.white : null,
+                              color: isSelected
+                                  ? colorScheme.onPrimary
+                                  : colorScheme.onSurface,
                             ),
                           ),
                         ),
                         if (isSelected)
-                          const Positioned(
+                          Positioned(
                             top: 8,
                             right: 8,
                             child: Icon(
                               Icons.check_circle,
-                              color: Colors.white,
+                              color: colorScheme.onPrimary,
                               size: 24,
                             ),
                           ),
@@ -129,6 +147,7 @@ class RootPageState extends State<RootPage> {
             Text(
               'Selected: ${selectedMuscleGroups.join(', ')}',
               textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
             BasicAppButton(
