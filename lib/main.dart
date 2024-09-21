@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:myapp/core/configs/theme/app_theme.dart';
 import 'package:myapp/firebase_options.dart';
-import 'package:myapp/presentation/choose_mode/bloc/theme_cubit.dart';
+import 'package:myapp/presentation/root/pages/bloc/theme_cubit.dart';
 import 'package:myapp/presentation/splash/pages/splash.dart';
 import 'package:myapp/service_locator.dart';
 import 'package:path_provider/path_provider.dart';

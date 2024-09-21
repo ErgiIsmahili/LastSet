@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/core/configs/assets/app_vectors.dart';
-import 'package:myapp/presentation/intro/get_started.dart';
+import 'package:myapp/presentation/auth/pages/signup_or_signin.dart';
 
 class SplashPage extends StatefulWidget{
   const SplashPage({super.key});
@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => const GetStartedPage(),
+        builder: (BuildContext context) => const SignupOrSigninPage(),
       ),
     );
   }
