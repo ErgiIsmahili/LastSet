@@ -24,7 +24,7 @@ class SignupPage extends StatelessWidget {
       bottomNavigationBar: _signinText(context),
       appBar: BasicAppBar(
         title: SvgPicture.asset(
-          AppVectors.logo,
+          AppVectors.logoWord,
           height: 40,
           width: 40,
           colorFilter: ColorFilter.mode(

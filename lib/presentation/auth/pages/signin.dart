@@ -23,7 +23,7 @@ class SigninPage extends StatelessWidget {
       bottomNavigationBar: _signupText(context),
       appBar: BasicAppBar(
         title: SvgPicture.asset(
-          AppVectors.logo,
+          AppVectors.logoWord,
           height: 40,
           width: 40,
           colorFilter: ColorFilter.mode(

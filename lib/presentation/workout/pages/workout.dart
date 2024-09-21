@@ -235,7 +235,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     return Scaffold(
       appBar: BasicAppBar(
         title: SvgPicture.asset(
-          AppVectors.logo,
+          AppVectors.logoWord,
           height: 40,
           width: 40,
           colorFilter: ColorFilter.mode(

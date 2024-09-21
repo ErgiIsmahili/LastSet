@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myapp/common/helpers/is_dark_mode.dart';
-import 'package:myapp/common/widgets/appbar/app_bar.dart';
 import 'package:myapp/common/widgets/button/basic_app_button.dart';
 import 'package:myapp/core/configs/assets/app_images.dart';
 import 'package:myapp/core/configs/assets/app_vectors.dart';
@@ -19,7 +18,6 @@ class SignupOrSigninPage extends StatelessWidget{
     return Scaffold(
       body: Stack(
         children: [
-          const BasicAppBar(),
           Align(
             alignment: Alignment.topRight,
             child: SvgPicture.asset(
@@ -45,7 +43,7 @@ class SignupOrSigninPage extends StatelessWidget{
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                      AppVectors.logo,
+                      AppVectors.logoWord,
                       colorFilter: ColorFilter.mode(
                           isDarkMode ? Colors.white : Colors.black, BlendMode.srcIn),
                     ),

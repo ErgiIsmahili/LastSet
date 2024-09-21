@@ -12,8 +12,8 @@ class RootPage extends StatefulWidget {
 class RootPageState extends State<RootPage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    HomePage(),
-    ProfilePage(),
+    const HomePage(),
+    const ProfilePage(),
   ];
 
   void _onTabTapped(int index) {
