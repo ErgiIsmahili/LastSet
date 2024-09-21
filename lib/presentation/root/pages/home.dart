@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:myapp/presentation/root/pages/select_workout.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:myapp/core/configs/assets/app_vectors.dart';
 
@@ -94,11 +95,32 @@ class HomePageState extends State<HomePage> {
             child: SmoothPageIndicator(
               controller: _pageController,
               count: workouts.length,
-              effect: WormEffect( 
+              effect: WormEffect(
                 dotHeight: 12,
                 dotWidth: 12,
                 activeDotColor: colorScheme.primary,
                 dotColor: Colors.grey,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SelectWorkoutPage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text(
+                'Go to Next Page',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
