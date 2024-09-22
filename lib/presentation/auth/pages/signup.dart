@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myapp/common/widgets/appbar/app_bar.dart';
@@ -15,6 +17,8 @@ class SignupPage extends StatelessWidget {
   final TextEditingController _fullName = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+
+  final String _defaultProfilePicture = 'https://example.com/default_profile_pic.png';
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +154,7 @@ class SignupPage extends StatelessWidget {
         fullName: _fullName.text.toString(),
         email: _email.text.toString(),
         password: _password.text.toString(),
+        profilePicture: _defaultProfilePicture,
       ),
     );
     result.fold(
@@ -157,7 +162,18 @@ class SignupPage extends StatelessWidget {
         var snackbar = SnackBar(content: Text(l));
         ScaffoldMessenger.of(context).showSnackBar(snackbar);
       },
-      (r) {
+      (r) async {
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await user.updateDisplayName(_fullName.text.toString());
+        }
+        
+        await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
+          'fullName': _fullName.text.toString(),
+          'email': _email.text.toString(),
+          'profilePicture': _defaultProfilePicture,
+        });
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (BuildContext context) => const RootPage()),
