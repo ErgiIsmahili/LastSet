@@ -191,15 +191,16 @@ class ProfilePageState extends State<ProfilePage> {
 
                 final userData = snapshot.data?.data() as Map<String, dynamic>? ?? {};
                 final fullName = userData['fullName'] as String? ?? user.displayName ?? 'N/A';
-                final email = user.email ?? 'N/A';
 
                 return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: GestureDetector(
                           onTap: _updateProfilePicture,
                           child: Stack(
                             children: [
@@ -226,20 +227,26 @@ class ProfilePageState extends State<ProfilePage> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        Text(fullName),
-                        const SizedBox(height: 8),
-                        Text(email),
-                        const SizedBox(height: 24),
-                        ElevatedButton(
-                          onPressed: _signOut,
-                          child: const Text('Sign Out'),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(fullName),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: _signOut,
+                        style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(colorScheme.primary),
+                      ),
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            color: colorScheme.onPrimary,
+                          ),
+                        ),)
+                    ],
                   ),
-                );
-              },
+                ),
+              );
+              }
             ),
     );
   }
