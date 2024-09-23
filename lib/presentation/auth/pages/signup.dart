@@ -18,7 +18,7 @@ class SignupPage extends StatelessWidget {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
-  final String _defaultProfilePicture = 'https://example.com/default_profile_pic.png';
+  final String _defaultProfilePicture = 'user_profiles/default_profile.jpg';
 
   @override
   Widget build(BuildContext context) {

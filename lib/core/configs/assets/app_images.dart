@@ -12,5 +12,5 @@ class AppImages {
   static const String fullbody = '${basePath}fullbody.png';
   static const String backtri = '${basePath}back_tri.jpg';
   static const String chestbi = '${basePath}chest_bi.png';
-   static const String chestback = '${basePath}chest_back.jpg';
+  static const String chestback = '${basePath}chest_back.jpg';
 }    
