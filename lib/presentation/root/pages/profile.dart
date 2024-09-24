@@ -1,13 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/core/configs/assets/app_vectors.dart';
-import 'package:myapp/presentation/root/pages/bloc/theme_cubit.dart';
+import 'package:myapp/common/helpers/is_dark_mode.dart';
 import 'package:myapp/presentation/root/pages/widgets/main_appbar.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -127,7 +124,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    bool isDarkMode = context.isDarkMode;
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
@@ -185,16 +182,31 @@ class ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Text(fullName),
+                      Text(
+                        fullName,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
                       const SizedBox(height: 24),
                       ElevatedButton(
                         onPressed: _signOut,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          backgroundColor: isDarkMode ? Colors.white : Colors.black,
+                        ),
                         child: Text(
                           'Sign Out',
                           style: TextStyle(
-                            color: colorScheme.primary,
+                            color: isDarkMode ? Colors.black : Colors.white,
                           ),
-                        ),)
+                        ),
+                      )
                     ],
                   ),
                 ),
