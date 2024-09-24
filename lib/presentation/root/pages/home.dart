@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/common/helpers/is_dark_mode.dart';
 import 'package:myapp/presentation/root/pages/select_workout.dart';
 import 'package:myapp/presentation/root/pages/widgets/main_appbar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -26,6 +27,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    bool isDarkMode = context.isDarkMode;
 
     return Scaffold(
        appBar: const MainAppBar(),
@@ -101,10 +103,15 @@ class HomePageState extends State<HomePage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
+                backgroundColor: isDarkMode ? Colors.white : Colors.black,
               ),
               child: Text(
-                'Custom Workout +',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.primary),
+                'Custom Workout',
+                style: TextStyle(
+                  fontSize: 16, 
+                  fontWeight: FontWeight.bold, 
+                  color: isDarkMode ? Colors.black : Colors.white,
+                ),
               ),
             ),
           ),
