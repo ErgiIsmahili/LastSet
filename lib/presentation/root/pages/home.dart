@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:myapp/presentation/root/pages/select_workout.dart';
+import 'package:myapp/presentation/root/pages/widgets/main_appbar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:myapp/core/configs/assets/app_vectors.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,23 +28,8 @@ class HomePageState extends State<HomePage> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Container(
-          alignment: Alignment.topLeft,
-          child: SvgPicture.asset(
-            AppVectors.logo,
-            height: 40,
-            width: 40,
-            colorFilter: ColorFilter.mode(
-              colorScheme.onSurface,
-              BlendMode.srcIn,
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Column(
+       appBar: const MainAppBar(),
+       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
@@ -118,9 +102,9 @@ class HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text(
-                'Go to Next Page',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              child: Text(
+                'Custom Workout +',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.primary),
               ),
             ),
           ),

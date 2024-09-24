@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myapp/core/configs/assets/app_vectors.dart';
 import 'package:myapp/presentation/root/pages/bloc/theme_cubit.dart';
+import 'package:myapp/presentation/root/pages/widgets/main_appbar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -130,52 +131,7 @@ class ProfilePageState extends State<ProfilePage> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SvgPicture.asset(
-              AppVectors.logo,
-              height: 40,
-              width: 40,
-              colorFilter: ColorFilter.mode(
-                colorScheme.onSurface,
-                BlendMode.srcIn,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, themeMode) {
-              return Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.wb_sunny),
-                    color: themeMode == ThemeMode.light
-                        ? colorScheme.primary
-                        : colorScheme.onSurface,
-                    onPressed: () {
-                      context.read<ThemeCubit>().updateTheme(ThemeMode.light);
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.nights_stay),
-                    color: themeMode == ThemeMode.dark
-                        ? colorScheme.primary
-                        : colorScheme.onSurface,
-                    onPressed: () {
-                      context.read<ThemeCubit>().updateTheme(ThemeMode.dark);
-                    },
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: const MainAppBar(),
       body: user == null
           ? const Center(child: Text('No user logged in'))
           : FutureBuilder<DocumentSnapshot>(
@@ -233,13 +189,10 @@ class ProfilePageState extends State<ProfilePage> {
                       const SizedBox(height: 24),
                       ElevatedButton(
                         onPressed: _signOut,
-                        style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(colorScheme.primary),
-                      ),
                         child: Text(
                           'Sign Out',
                           style: TextStyle(
-                            color: colorScheme.onPrimary,
+                            color: colorScheme.primary,
                           ),
                         ),)
                     ],
