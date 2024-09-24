@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/common/helpers/is_dark_mode.dart';
 import 'package:myapp/presentation/root/pages/select_workout.dart';
-import 'package:myapp/presentation/root/pages/widgets/main_appbar.dart';
+import 'package:myapp/presentation/root/widgets/main_appbar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {

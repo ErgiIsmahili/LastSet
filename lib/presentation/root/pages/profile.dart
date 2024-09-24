@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myapp/common/helpers/is_dark_mode.dart';
-import 'package:myapp/presentation/root/pages/widgets/main_appbar.dart';
+import 'package:myapp/presentation/root/widgets/main_appbar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
