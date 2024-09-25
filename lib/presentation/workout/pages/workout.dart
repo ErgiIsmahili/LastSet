@@ -225,6 +225,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         itemCount: exercises.length,
                         viewportFraction: 0.8,
                         scale: 0.9,
+                        loop: false,
                       ),
                     ),
                     _buildBottomSection(context),
