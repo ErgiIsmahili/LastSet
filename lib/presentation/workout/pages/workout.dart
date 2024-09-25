@@ -46,14 +46,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
       widget.selectedMuscleGroups.map((muscle) => _fetchExercisesForMuscle(muscle))
     );
 
-    if (!mounted) return; // Check if the widget is still in the tree
+    if (!mounted) return;
 
     setState(() {
       this.exercises = exercises.expand((e) => e).toList();
       isLoading = false;
     });
   } catch (e) {
-    if (!mounted) return; // Check if the widget is still in the tree
+    if (!mounted) return;
 
     setState(() {
       isLoading = false;
@@ -98,22 +98,51 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Future<void> _finishWorkout() async {
     if (!mounted) return;
 
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.none) {
-      _showErrorSnackBar('No internet connection. Please check your network and try again.');
-      return;
-    }
+    // Show confirmation dialog
+    final confirm = await _showConfirmationDialog();
 
-    try {
-      final workoutName = 'Workout ${DateTime.now().toIso8601String()}';
-      await _workoutStorage.saveWorkout(workoutName, workoutData);
+    // If user confirmed, proceed
+    if (confirm ?? false) {
+      var connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.none) {
+        _showErrorSnackBar('No internet connection. Please check your network and try again.');
+        return;
+      }
 
-      if (!mounted) return;
-      _showSuccessSnackBar('Workout saved successfully!');
-    } catch (e) {
-      if (!mounted) return;
-      _showErrorSnackBar('An error occurred while saving the workout. Please try again.');
+      try {
+        final workoutName = 'Workout ${DateTime.now().toIso8601String()}';
+        await _workoutStorage.saveWorkout(workoutName, workoutData);
+
+        if (!mounted) return;
+        _showSuccessSnackBar('Workout saved successfully!');
+      } catch (e) {
+        if (!mounted) return;
+        _showErrorSnackBar('An error occurred while saving the workout. Please try again.');
+      }
     }
+  }
+
+  Future<bool?> _showConfirmationDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Finish Workout'),
+          content: const Text('Are you sure you want to finish your workout?'),
+          backgroundColor: Colors.black,
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showSuccessSnackBar(String message) {
