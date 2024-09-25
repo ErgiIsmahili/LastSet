@@ -98,10 +98,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Future<void> _finishWorkout() async {
     if (!mounted) return;
 
-    // Show confirmation dialog
     final confirm = await _showConfirmationDialog();
 
-    // If user confirmed, proceed
     if (confirm ?? false) {
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.none) {
@@ -123,27 +121,40 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   Future<bool?> _showConfirmationDialog() {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Finish Workout'),
-          content: const Text('Are you sure you want to finish your workout?'),
-          backgroundColor: Colors.black,
-          actions: <Widget>[
-            TextButton(
+  return showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Finish Workout'),
+        content: const Text('Are you sure you want to finish your workout?'),
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(color: Colors.white, width: 2),
+        ),
+        actions: <Widget>[
+          Container(
+            child: TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: TextStyle(color: Colors.white)),
             ),
-            TextButton(
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 1),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Confirm'),
+              child: const Text('Confirm', style: TextStyle(color: Colors.white)),
             ),
-          ],
-        );
-      },
-    );
-  }
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
