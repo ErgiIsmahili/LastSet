@@ -157,10 +157,15 @@ class SignupPage extends StatelessWidget {
         profilePicture: _defaultProfilePicture,
       ),
     );
+    
+    if (!context.mounted) return;
+
     result.fold(
       (l) {
         var snackbar = SnackBar(content: Text(l));
-        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        }
       },
       (r) async {
         User? user = FirebaseAuth.instance.currentUser;
@@ -174,11 +179,13 @@ class SignupPage extends StatelessWidget {
           'profilePicture': _defaultProfilePicture,
         });
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (BuildContext context) => const RootPage()),
-          (route) => false,
-        );
+        if (context.mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => const RootPage()),
+            (route) => false,
+          );
+        }
       },
     );
   }
