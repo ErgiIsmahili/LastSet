@@ -36,85 +36,109 @@ class SetInfoState extends State<SetInfo> {
   }
 
   double get previousWeight => (widget.lastSet?['weight']?.toDouble() ?? 0.0);
-
   double get previousReps => (widget.lastSet?['reps']?.toDouble() ?? 0.0);
 
   void _completeSet() {
-    if (!_isCompleted) {
-      setState(() {
-        _isCompleted = true;
-      });
-      widget.onSetCompleted(
-        widget.setNumber,
-        int.tryParse(_weightController.text) ?? 0,
-        int.tryParse(_repsController.text) ?? 0,
-      );
-    }
+    setState(() {
+      _isCompleted = !_isCompleted;
+    });
+
+    widget.onSetCompleted(
+      widget.setNumber,
+      int.tryParse(_weightController.text) ?? 0,
+      int.tryParse(_repsController.text) ?? 0,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('Set'),
-              Text('${widget.setNumber}'),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('Previous'),
-              Text('$previousWeight lb x $previousReps'),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('lbs'),
-              SizedBox(
-                width: 50,
-                child: TextField(
-                  controller: _weightController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
+    return GestureDetector(
+      onTap: _completeSet,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Set'),
+                Text('${widget.setNumber}'),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Previous'),
+                Text(
+                  '$previousWeight lb x $previousReps',
+                  style: const TextStyle(
+                    color: Colors.grey,
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text('reps'),
-              SizedBox(
-                width: 50,
-                child: TextField(
-                  controller: _repsController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('lbs'),
+                SizedBox(
+                  width: 40,
+                  height: 25,
+                  child: TextField(
+                    controller: _weightController,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      isDense: true,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          GestureDetector(
-            onTap: _completeSet,
-            child: Icon(
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('reps'),
+                SizedBox(
+                  width: 40,
+                  height: 25,
+                  child: TextField(
+                    controller: _repsController,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      isDense: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Icon(
               _isCompleted ? Icons.check_circle : Icons.check_circle_outline,
               color: _isCompleted ? Colors.green : Colors.grey,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -53,73 +53,82 @@ class _ExerciseCardState extends State<ExerciseCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.exercise['name'],
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 0.5), 
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.exercise['name'],
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                const Icon(Icons.favorite_border),
-              ],
+                  const Icon(Icons.favorite_border),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Image.asset(
-              AppImages.arms,
-              fit: BoxFit.cover,
-              width: double.infinity,
+            Expanded(
+              child: Image.asset(
+                AppImages.latpulldown,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Column(
-                    children: [
-                      SizedBox(
-                        height: 200,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              for (int i = 0; i < (lastWorkoutSets.length > 3 ? lastWorkoutSets.length : 3); i++)
-                                SetInfo(
-                                  setNumber: i + 1,
-                                  lastSet: lastWorkoutSets.length > i ? lastWorkoutSets[i] : null,
-                                  onSetCompleted: widget.onSetCompleted,
-                                ),
-                            ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      children: [
+                        SizedBox(
+                          height: 200,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                for (int i = 0; i < (lastWorkoutSets.length > 3 ? lastWorkoutSets.length : 3); i++)
+                                  SizedBox(
+                                    height: 70,
+                                    child: SetInfo(
+                                      setNumber: i + 1,
+                                      lastSet: lastWorkoutSets.length > i ? lastWorkoutSets[i] : null,
+                                      onSetCompleted: widget.onSetCompleted,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      OutlinedButton(
-                        onPressed: () {
-                          setState(() {
-                            lastWorkoutSets.add({});
-                          });
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                        const SizedBox(height: 8),
+                        OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              lastWorkoutSets.add({});
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
+                          child: const Text('+ Add Set'),
                         ),
-                        child: const Text('+ Add Set'),
-                      ),
-                    ],
-                  ),
-          ),
-        ],
+                      ],
+                    ),
+            )
+          ],
+        ),
       ),
     );
   }
