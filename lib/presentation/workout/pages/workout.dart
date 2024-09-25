@@ -133,11 +133,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
           side: const BorderSide(color: Colors.white, width: 2),
         ),
         actions: <Widget>[
-          Container(
-            child: TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel', style: TextStyle(color: Colors.white)),
-            ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
           ),
           Container(
             decoration: BoxDecoration(
