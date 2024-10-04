@@ -1,4 +1,9 @@
-![First Page](../myapp/assets/images/first_page.png "First Page")
-![Sign In Page](../myapp/assets/images/signin.png "Sign In Page")
-![Custom Workout Page](../myapp/assets/images/select.png "Custom Workout Page")
-![Workout Page](../myapp/assets/images/workout.png "Workout Page")
+<div style="display: flex; justify-content: space-between;">
+    <img src="assets/images/first_page.png" alt="First Page" title="First Page" width="45%" />
+    <img src="assets/images/signin.png" alt="Sign In Page" title="Sign In Page" width="45%" />
+</div>
+
+<div style="display: flex; justify-content: space-between; margin-top: 10px;">
+    <img src="assets/images/select.png" alt="Custom Workout Page" title="Custom Workout Page" width="45%" />
+    <img src="assets/images/workout.png" alt="Workout Page" title="Workout Page" width="45%" />
+</div>
